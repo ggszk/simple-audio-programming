@@ -1,64 +1,31 @@
 [build-system]
-requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
 
-[project]
+[tool.poetry]
 name = "simple-audio-programming"
 version = "1.0.0"
 description = "音響プログラミング学習用の教育的Pythonライブラリ"
+authors = ["Simple Audio Programming Team <your-email@example.com>"]
 readme = "README.md"
-requires-python = ">=3.8"
-license = {text = "MIT"}
-authors = [
-    {name = "Simple Audio Programming Team"},
-]
-keywords = ["audio", "programming", "education", "dsp", "synthesis"]
-classifiers = [
-    "Development Status :: 5 - Production/Stable",
-    "Intended Audience :: Education",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Topic :: Multimedia :: Sound/Audio",
-    "Topic :: Education",
-    "Topic :: Scientific/Engineering :: Information Analysis",
-]
-dependencies = [
-    "numpy>=1.21.0",
-    "scipy>=1.7.0",
-    "matplotlib>=3.5.0",
-    "jupyter>=1.0.0",
-]
+package-mode = false
+homepage = "https://github.com/ggszk/simple-audio-programming"
+repository = "https://github.com/ggszk/simple-audio-programming.git"
 
-[project.optional-dependencies]
-dev = [
-    "pytest>=7.0.0",
-    "pytest-cov>=4.0.0",
-    "flake8>=5.0.0",
-    "black>=22.0.0",
-    "isort>=5.10.0",
-    "mypy>=1.0.0",
-]
-docs = [
-    "sphinx>=5.0.0",
-    "sphinx-rtd-theme>=1.2.0",
-    "myst-parser>=0.18.0",
-]
+[tool.poetry.dependencies]
+python = "^3.8"
+numpy = "^1.21.0"
+scipy = "^1.7.0"
+matplotlib = "^3.5.0"
+jupyter = "^1.0.0"
 
-[project.urls]
-Homepage = "https://github.com/ggszk/simple-audio-programming"
-Repository = "https://github.com/ggszk/simple-audio-programming.git"
-Issues = "https://github.com/ggszk/simple-audio-programming/issues"
-Documentation = "https://simple-audio-programming.readthedocs.io/"
-
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["audio_lib*"]
-exclude = ["tests*"]
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.0.0"
+pytest-cov = "^4.0.0"
+flake8 = "^5.0.0"
+black = "^22.0.0"
+isort = "^5.10.0"
+mypy = "^1.0.0"
 
 [tool.black]
 line-length = 88
@@ -104,22 +71,19 @@ module = ["matplotlib.*", "scipy.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
-# テストディスカバリの設定
 testpaths = ["tests"]
 python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 
-# テスト実行オプション
 addopts = [
-    "-v",                    # 詳細出力
-    "--tb=short",           # トレースバック短縮表示
-    "--strict-markers",     # 未定義マーカーでエラー
-    "--strict-config",      # 設定エラーを厳格に扱う
-    "--color=yes",          # カラー出力
+    "-v",
+    "--tb=short",
+    "--strict-markers",
+    "--strict-config",
+    "--color=yes",
 ]
 
-# マーカー定義
 markers = [
     "slow: 実行時間の長いテスト",
     "integration: 統合テスト",
@@ -134,7 +98,6 @@ markers = [
     "envelopes: エンベロープ関連のテスト",
 ]
 
-# テストフィルタリング
 filterwarnings = [
     "ignore::UserWarning",
     "ignore::DeprecationWarning",
