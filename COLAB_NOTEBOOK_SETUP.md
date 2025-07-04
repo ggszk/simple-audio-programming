@@ -47,17 +47,39 @@ def play_sound(signal, sample_rate=44100, title="Audio"):
     """
     Colab/Jupyter環境で音声を再生するヘルパー関数
     
+    ⚠️ 重要な注意点:
+    AudioウィジェットはAUTO-NORMALIZEします（音量を自動調整）
+    真の音量差を確認するにはWAVファイル保存→ダウンロード→再生
+    
     Args:
         signal: 音声信号（numpy array）
         sample_rate: サンプリングレート
         title: 表示用タイトル
     """
-    # 信号を正規化（クリッピング防止）
-    if np.max(np.abs(signal)) > 0:
-        signal = signal / np.max(np.abs(signal)) * 0.8
-    
+    # 振幅情報を表示（正規化前）
+    max_amplitude = np.max(np.abs(signal))
     print(f"🔊 {title}")
-    display(Audio(signal, rate=sample_rate))
+    print(f"📊 実際の振幅: {max_amplitude:.3f} (注: Audioは自動正規化されます)")
+    
+    return Audio(signal, rate=sample_rate)
+
+def save_and_play(signal, sample_rate=44100, filename="audio_output.wav", title="Audio"):
+    """
+    音声を保存して再生（音量を保持）
+    
+    Args:
+        signal: 音声信号
+        sample_rate: サンプリングレート
+        filename: 保存ファイル名
+        title: 表示用タイトル
+    """
+    # ファイル保存（音量保持）
+    save_audio(filename, sample_rate, signal)
+    print(f"� {filename} に保存しました (振幅: {np.max(np.abs(signal)):.3f})")
+    print(f"📁 音量差を確認するにはファイルをダウンロードして再生してください")
+    
+    # Audioウィジェット表示（参考用）
+    return Audio(signal, rate=sample_rate)
     
 def plot_waveform(signal, sample_rate=44100, title="Waveform", max_points=1000):
     """

@@ -79,8 +79,12 @@ adsr = ADSREnvelope(attack=0.1, decay=0.2, sustain=0.7, release=0.3)
 envelope = adsr.generate(duration=1.0)
 signal_with_envelope = signal * envelope
 
-# ファイル保存
+# ファイル保存（音量差が保持される）
 save_audio("output.wav", 44100, signal_with_envelope)
+
+# 💡 Jupyter/Colabでの再生注意点:
+# Audio()ウィジェットは自動正規化するため音量差が聞こえません
+# 実際の音量差を確認するにはファイル保存→ダウンロード→再生
 ```
 
 ### 楽器クラスの使用
@@ -350,8 +354,12 @@ adsr = ADSREnvelope(attack=0.1, decay=0.2, sustain=0.7, release=0.3)
 envelope = adsr.generate(duration=1.0)
 final_signal = signal * envelope
 
-# 3. WAVファイルとして保存
+# 3. WAVファイルとして保存（音量が正確に保持される）
 save_audio("my_first_sound.wav", 44100, final_signal)
+
+# 💡 Colab/Jupyter注意点: 
+# Audio()ウィジェットは音量を自動正規化します
+# 真の音量差を確認するにはファイルをダウンロードして再生してください
 ```
 
 ### Jupyter Notebook でのチュートリアル
