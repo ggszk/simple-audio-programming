@@ -14,7 +14,7 @@ if IN_COLAB:
     print("🔧 Google Colab環境を設定中...")
     
     # 必要なパッケージをインストール
-    !pip install numpy scipy matplotlib ipython
+    !pip install numpy scipy matplotlib ipython japanize-matplotlib
     
     # GitHubからライブラリをクローン
     !git clone https://github.com/ggszk/simple-audio-programming.git
@@ -33,6 +33,12 @@ else:
 # 共通インポート
 import numpy as np
 import matplotlib.pyplot as plt
+
+# 日本語フォント設定（Colab用）
+if IN_COLAB:
+    import japanize_matplotlib
+    print("✅ 日本語フォントを設定しました")
+
 from IPython.display import Audio, display
 import warnings
 warnings.filterwarnings('ignore')
