@@ -1,0 +1,31 @@
+# 開発・テスト用の依存関係
+# Development and testing dependencies
+
+# テストフレームワーク
+pytest>=7.0.0
+pytest-cov>=4.0.0
+pytest-mock>=3.10.0
+
+# コード品質チェック
+flake8>=5.0.0
+black>=22.0.0
+isort>=5.10.0
+mypy>=1.0.0
+
+# ドキュメント生成
+sphinx>=5.0.0
+sphinx-rtd-theme>=1.2.0
+myst-parser>=0.18.0
+
+# Jupyter Notebook 開発
+nbformat>=5.4.0
+nbconvert>=7.0.0
+jupyter>=1.0.0
+
+# パフォーマンス プロファイリング
+line_profiler>=4.0.0
+memory_profiler>=0.60.0
+
+# その他の開発ツール
+pre-commit>=2.20.0
+tox>=4.0.0

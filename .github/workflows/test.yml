@@ -1,0 +1,47 @@
+name: Test Audio Library
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8, 3.9, '3.10', '3.11']
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest
+    
+    - name: Test imports
+      run: |
+        python -c "from audio_lib.core.audio_config import AudioConfig; print('✓ Core imports work')"
+        python -c "from audio_lib.synthesis.oscillators import SineWave; print('✓ Synthesis imports work')"
+        python -c "from audio_lib.instruments.basic_instruments import Piano; print('✓ Instruments imports work')"
+    
+    - name: Test basic functionality
+      run: |
+        python -c "
+        from audio_lib.core.audio_config import AudioConfig
+        from audio_lib.synthesis.oscillators import SineWave
+        config = AudioConfig()
+        sine = SineWave(config)
+        samples = sine.generate(440, 0.1)
+        print(f'✓ Generated {len(samples)} samples')
+        assert len(samples) > 0, 'No samples generated'
+        print('✓ All tests passed')
+        "
