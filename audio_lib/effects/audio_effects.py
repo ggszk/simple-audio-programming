@@ -7,6 +7,16 @@
 import numpy as np
 from ..core.audio_config import AudioConfig
 
+# エクスポート対象を明示
+__all__ = [
+    'Reverb',
+    'Distortion', 
+    'Delay',
+    'Chorus',
+    'Compressor',
+    'apply_compression'
+]
+
 class Reverb:
     """リバーブ（残響）エフェクト"""
     
