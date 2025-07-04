@@ -10,19 +10,28 @@ from ..core.audio_config import AudioConfig
 class Reverb:
     """リバーブ（残響）エフェクト"""
     
-    def __init__(self, reverb_time=1.0, wet_level=0.3, config=None):
+    def __init__(self, room_size=0.5, damping=0.5, wet_level=0.3, reverb_time=None, config=None):
         """
         リバーブエフェクトを初期化
         
         Args:
-            reverb_time (float): 残響時間 (秒)
+            room_size (float): 部屋のサイズ (0.0-1.0)
+            damping (float): ダンピング量 (0.0-1.0) 
             wet_level (float): エフェクト音のレベル (0.0-1.0)
+            reverb_time (float): 残響時間 (秒) - 後方互換性のため
             config (AudioConfig): オーディオ設定
         """
         self.config = config or AudioConfig()
-        self.reverb_time = reverb_time
+        self.room_size = room_size
+        self.damping = damping
         self.wet_level = wet_level
         self.dry_level = 1.0 - wet_level
+        
+        # room_sizeとdampingからreverb_timeを計算
+        if reverb_time is not None:
+            self.reverb_time = reverb_time
+        else:
+            self.reverb_time = room_size * 2.0  # room_sizeから残響時間を推定
         
         # 遅延ラインの設定
         self.delay_times = [0.03, 0.05, 0.07, 0.09]  # 複数の遅延時間
@@ -33,7 +42,7 @@ class Reverb:
             delay_samples = int(delay_time * self.config.sample_rate)
             self.delays.append(np.zeros(delay_samples))
             # フィードバック量を残響時間に基づいて設定
-            feedback = np.exp(-3 * delay_time / reverb_time)
+            feedback = np.exp(-3 * delay_time / self.reverb_time)
             self.feedbacks.append(feedback)
         
         self.delay_indices = [0] * len(self.delays)
@@ -69,6 +78,19 @@ class Reverb:
             output[n] = self.dry_level * x_n + self.wet_level * reverb_sum / len(self.delays)
         
         return output
+    
+    def apply(self, input_signal, sample_rate=None):
+        """
+        リバーブエフェクトを適用（教育用便利メソッド）
+        
+        Args:
+            input_signal (np.ndarray): 入力信号
+            sample_rate (int): サンプリングレート（未使用、互換性のため）
+            
+        Returns:
+            np.ndarray: リバーブが適用された信号
+        """
+        return self.process(input_signal)
 
 class Distortion:
     """ディストーション（歪み）エフェクト"""
@@ -104,6 +126,19 @@ class Distortion:
         
         # 出力レベルを調整
         return distorted * self.output_level
+
+    def apply(self, input_signal, sample_rate=None):
+        """
+        ディストーションエフェクトを適用（教育用便利メソッド）
+        
+        Args:
+            input_signal (np.ndarray): 入力信号
+            sample_rate (int): サンプリングレート（未使用、互換性のため）
+            
+        Returns:
+            np.ndarray: ディストーションが適用された信号
+        """
+        return self.process(input_signal)
 
 class Delay:
     """ディレイ（遅延）エフェクト"""
@@ -154,6 +189,19 @@ class Delay:
             self.delay_index = (self.delay_index + 1) % len(self.delay_buffer)
         
         return output
+
+    def apply(self, input_signal, sample_rate=None):
+        """
+        ディレイエフェクトを適用（教育用便利メソッド）
+        
+        Args:
+            input_signal (np.ndarray): 入力信号
+            sample_rate (int): サンプリングレート（未使用、互換性のため）
+            
+        Returns:
+            np.ndarray: ディレイが適用された信号
+        """
+        return self.process(input_signal)
 
 class Chorus:
     """コーラスエフェクト（簡易版）"""
@@ -218,6 +266,19 @@ class Chorus:
         
         return output
 
+    def apply(self, input_signal, sample_rate=None):
+        """
+        コーラスエフェクトを適用（教育用便利メソッド）
+        
+        Args:
+            input_signal (np.ndarray): 入力信号
+            sample_rate (int): サンプリングレート（未使用、互換性のため）
+            
+        Returns:
+            np.ndarray: コーラスが適用された信号
+        """
+        return self.process(input_signal)
+
 class Compressor:
     """コンプレッサー"""
     
@@ -278,3 +339,35 @@ class Compressor:
             output[n] = x_n * gain_reduction
         
         return output
+
+    def apply(self, input_signal, sample_rate=None):
+        """
+        コンプレッサーを適用（教育用便利メソッド）
+        
+        Args:
+            input_signal (np.ndarray): 入力信号
+            sample_rate (int): サンプリングレート（未使用、互換性のため）
+            
+        Returns:
+            np.ndarray: 圧縮された信号
+        """
+        return self.process(input_signal)
+
+# 便利関数
+def apply_compression(signal, threshold=0.7, ratio=4.0, attack=0.01, release=0.1, config=None):
+    """
+    コンプレッサーを信号に適用する便利関数
+    
+    Args:
+        signal (np.ndarray): 入力信号
+        threshold (float): 閾値 (0.0-1.0)
+        ratio (float): 圧縮比
+        attack (float): アタック時間 (秒)
+        release (float): リリース時間 (秒)
+        config (AudioConfig): オーディオ設定
+        
+    Returns:
+        np.ndarray: 圧縮された信号
+    """
+    compressor = Compressor(threshold, ratio, attack, release, config)
+    return compressor.process(signal)

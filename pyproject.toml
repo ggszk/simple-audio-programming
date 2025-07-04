@@ -104,23 +104,38 @@ module = ["matplotlib.*", "scipy.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
+# テストディスカバリの設定
 testpaths = ["tests"]
 python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
+
+# テスト実行オプション
 addopts = [
-    "--verbose",
-    "--tb=short",
-    "--strict-markers",
-    "--color=yes",
+    "-v",                    # 詳細出力
+    "--tb=short",           # トレースバック短縮表示
+    "--strict-markers",     # 未定義マーカーでエラー
+    "--strict-config",      # 設定エラーを厳格に扱う
+    "--color=yes",          # カラー出力
 ]
+
+# マーカー定義
 markers = [
-    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
-    "integration: marks tests as integration tests",
-    "unit: marks tests as unit tests",
-    "audio: marks tests that involve audio processing",
+    "slow: 実行時間の長いテスト",
+    "integration: 統合テスト",
+    "unit: 単体テスト",
+    "lesson1: Lesson 1関連のテスト",
+    "lesson2: Lesson 2関連のテスト", 
+    "lesson3: Lesson 3関連のテスト",
+    "lesson4: Lesson 4関連のテスト",
+    "audio: 音声処理関連のテスト",
+    "effects: エフェクト関連のテスト",
+    "oscillators: オシレーター関連のテスト",
+    "envelopes: エンベロープ関連のテスト",
 ]
+
+# テストフィルタリング
 filterwarnings = [
+    "ignore::UserWarning",
     "ignore::DeprecationWarning",
-    "ignore::PendingDeprecationWarning",
 ]

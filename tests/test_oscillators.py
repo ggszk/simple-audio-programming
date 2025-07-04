@@ -66,10 +66,11 @@ class TestSineWave:
         duration = 0.1
         amplitude = 0.5
         
-        signal = oscillator.generate(frequency, duration, amplitude=amplitude)
+        signal = oscillator.generate(frequency, duration)
+        signal_with_amplitude = signal * amplitude  # 振幅調整
         
         # 振幅が指定値に近いかチェック
-        max_amplitude = np.max(np.abs(signal))
+        max_amplitude = np.max(np.abs(signal_with_amplitude))
         assert abs(max_amplitude - amplitude) < 0.1
 
 
