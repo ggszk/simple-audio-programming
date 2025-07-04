@@ -51,8 +51,10 @@ class Reverb:
         for delay_time in self.delay_times:
             delay_samples = int(delay_time * self.config.sample_rate)
             self.delays.append(np.zeros(delay_samples))
-            # フィードバック量を残響時間に基づいて設定
+            # フィードバック量を残響時間に基づいて設定（安定性のため上限を設定）
             feedback = np.exp(-3 * delay_time / self.reverb_time)
+            # フィードバックの上限を0.9に制限（安定性とノイズ防止）
+            feedback = min(feedback, 0.9)
             self.feedbacks.append(feedback)
         
         self.delay_indices = [0] * len(self.delays)
@@ -78,14 +80,23 @@ class Reverb:
                 delayed_sample = delay_line[self.delay_indices[i]]
                 reverb_sum += delayed_sample
                 
+                # ダンピングを適用したフィードバック
+                damped_feedback = feedback * self.damping
+                
                 # 新しい値を遅延ラインに書き込み
-                delay_line[self.delay_indices[i]] = x_n + feedback * delayed_sample
+                delay_line[self.delay_indices[i]] = x_n + damped_feedback * delayed_sample
                 
                 # インデックスを更新
                 self.delay_indices[i] = (self.delay_indices[i] + 1) % len(delay_line)
             
             # ドライ音とウェット音をミックス
-            output[n] = self.dry_level * x_n + self.wet_level * reverb_sum / len(self.delays)
+            wet_signal = reverb_sum / len(self.delays)
+            output[n] = self.dry_level * x_n + self.wet_level * wet_signal
+        
+        # 出力の正規化（クリッピング防止）
+        max_amplitude = np.max(np.abs(output))
+        if max_amplitude > 1.0:
+            output = output / max_amplitude
         
         return output
     
