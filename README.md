@@ -355,6 +355,8 @@ save_audio("my_first_sound.wav", 44100, final_signal)
 ```
 
 ### Jupyter Notebook でのチュートリアル
+
+#### **ローカル環境**
 ```bash
 # Jupyter Lab を起動
 jupyter lab
@@ -362,6 +364,21 @@ jupyter lab
 # colab_lessons/ フォルダのノートブックを開く
 # lesson_01_basics_and_sine_waves.ipynb から始めてください
 ```
+
+#### **Google Colab（推奨）**
+以下のリンクから直接Colabでノートブックを開けます：
+
+| レッスン | 内容 | Colab リンク |
+|---------|------|-------------|
+| Lesson 01 | 基礎とサイン波 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ggszk/simple-audio-programming/blob/main/colab_lessons/lesson_01_basics_and_sine_waves.ipynb) |
+| Lesson 02 | エンベロープとADSR | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ggszk/simple-audio-programming/blob/main/colab_lessons/lesson_02_envelopes_and_adsr.ipynb) |
+| Lesson 03 | フィルターと音響設計 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ggszk/simple-audio-programming/blob/main/colab_lessons/lesson_03_filters_and_sound_design.ipynb) |
+| Lesson 04 | オーディオエフェクト | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ggszk/simple-audio-programming/blob/main/colab_lessons/lesson_04_audio_effects_and_dynamics.ipynb) |
+| Lesson 05 | MIDIとシーケンサー | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ggszk/simple-audio-programming/blob/main/colab_lessons/lesson_05_midi_and_sequencer.ipynb) |
+| Lesson 06 | サンプリングと分析 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ggszk/simple-audio-programming/blob/main/colab_lessons/lesson_06_sampling_and_analysis.ipynb) |
+| Lesson 07 | 最終プロジェクト | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ggszk/simple-audio-programming/blob/main/colab_lessons/lesson_07_final_project_and_performance.ipynb) |
+
+> **使い方**: リンクをクリック → Colabで開く → 「ドライブにコピー」で自分用に保存
 
 ## 🧪 テスト実行
 
