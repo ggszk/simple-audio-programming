@@ -390,15 +390,46 @@ jupyter lab
 
 ## 🧪 テスト実行
 
+### 🚀 簡単なテスト実行（推奨）
+
+```bash
+# 全テスト実行（51件のテスト）
+python run_tests.py
+
+# 包括的機能テスト
+python run_tests.py comprehensive
+
+# ノートブック関連テスト
+python run_tests.py notebook
+
+# 特定のレッスンテスト
+python run_tests.py lesson1
+python run_tests.py lesson2
+
+# クイックテスト（最小限）
+python run_tests.py quick
+
+# 簡潔な出力
+python run_tests.py --quiet
+```
+
+### 🔧 直接pytestでのテスト実行
+
 ```bash
 # 全テストの実行
 pytest
+
+# 詳細出力
+pytest -v -s
 
 # カバレッジ付きテスト
 pytest --cov=audio_lib
 
 # 特定のテストファイルのみ
 pytest tests/test_oscillators.py -v
+
+# 特定のテストクラス
+pytest tests/test_notebook_scenarios.py::TestLesson01BasicsAndSineWaves -v
 ```
 
 ## 🤝 貢献
