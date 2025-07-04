@@ -10,7 +10,7 @@ from .synthesis.oscillators import SineWave, SawtoothWave, SquareWave
 from .synthesis.envelopes import ADSREnvelope, LinearEnvelope
 from .effects.filters import LowPassFilter, HighPassFilter
 from .effects.audio_effects import Reverb, Distortion
-from .synthesis.note_utils import note_to_frequency, frequency_to_note
+from .synthesis.note_utils import note_to_frequency, frequency_to_note, note_name_to_number
 
 __version__ = "1.0.0"
 __author__ = "音のプログラミング教育チーム"
