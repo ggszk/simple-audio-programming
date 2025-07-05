@@ -6,9 +6,9 @@
 
 import numpy as np
 from ..synthesis.oscillators import SineWave, SawtoothWave, SquareWave, NoiseGenerator
-from ..synthesis.envelopes import ADSREnvelope, LinearEnvelope, apply_envelope
+from ..synthesis.envelopes import ADSREnvelope, apply_envelope
 from ..synthesis.note_utils import note_to_frequency
-from ..effects.filters import LowPassFilter, HighPassFilter
+from ..effects.filters import LowPassFilter
 from ..core.audio_config import AudioConfig
 
 class BaseInstrument:

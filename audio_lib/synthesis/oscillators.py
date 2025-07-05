@@ -67,9 +67,6 @@ class SawtoothWave(BaseOscillator):
         """
         t = self._create_time_array(duration)
         
-        # 基本周期
-        period = 1.0 / frequency
-        
         # 位相を考慮したノコギリ波
         signal = 2.0 * ((frequency * t + phase) % 1.0) - 1.0
         

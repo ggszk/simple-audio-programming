@@ -13,8 +13,7 @@ import matplotlib.pyplot as plt
 from audio_lib import (
     AudioConfig, save_audio,
     SineWave, SawtoothWave, SquareWave,
-    ADSREnvelope, LinearEnvelope, apply_envelope,
-    note_to_frequency, note_name_to_number
+    ADSREnvelope, LinearEnvelope, apply_envelope
 )
 from audio_lib.effects import LowPassFilter, Reverb
 

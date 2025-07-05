@@ -11,7 +11,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import numpy as np
 from audio_lib.core.audio_config import AudioConfig
 from audio_lib.core.wave_io import save_wav as save_audio
-from audio_lib.synthesis.oscillators import SineWave, SawWave as SawtoothWave
+from audio_lib.synthesis.oscillators import SineWave
 from audio_lib.synthesis.envelopes import ADSREnvelope, apply_envelope
 from audio_lib.synthesis.note_utils import note_to_frequency, note_name_to_number
 from audio_lib.instruments.basic_instruments import Piano, Guitar, Drum
@@ -192,6 +192,21 @@ def example_05_sequencer_demo():
     sequencer.master_volume = 0.8
     sequencer.render("example_05_sequencer_demo.wav")
     print("→ example_05_sequencer_demo.wav を保存しました")
+
+def create_chord(track, chord_notes, start_time, duration, velocity=100):
+    """
+    トラックに和音を追加するヘルパー関数
+    
+    Args:
+        track: シーケンサーのトラック
+        chord_notes: 音名のリスト（例: ['C4', 'E4', 'G4']）
+        start_time: 開始時間（秒）
+        duration: 音の長さ（秒）
+        velocity: 音の強さ（0-127）
+    """
+    for note_name in chord_notes:
+        note_number = note_name_to_number(note_name)
+        track.add_note(note_number, velocity, start_time, duration)
 
 def main():
     """全ての例を実行"""

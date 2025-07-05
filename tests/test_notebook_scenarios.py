@@ -10,9 +10,9 @@ import pytest
 import tempfile
 import os
 from audio_lib import (
-    AudioConfig, SineWave, SquareWave, SawtoothWave, 
+    AudioConfig, SineWave, SawtoothWave, 
     ADSREnvelope, LinearEnvelope,
-    save_audio, note_to_frequency, frequency_to_note, note_name_to_number
+    save_audio, note_to_frequency, note_name_to_number
 )
 from audio_lib.synthesis.envelopes import apply_envelope
 from audio_lib.effects.audio_effects import (
