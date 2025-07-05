@@ -5,9 +5,9 @@
 """
 
 import numpy as np
-from ..core.audio_config import AudioConfig
-from ..core.wave_io import WaveFileIO
-from ..synthesis.note_utils import note_name_to_number
+from audio_lib.core.audio_config import AudioConfig
+from audio_lib.core.wave_io import WaveFileIO
+from audio_lib.synthesis.note_utils import note_name_to_number
 
 class Note:
     """音符を表すクラス"""
