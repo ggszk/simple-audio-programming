@@ -185,7 +185,9 @@ poetry run python examples/basic_examples.py
 
 ### 3. Jupyter Notebookでの学習
 ```bash
-poetry shell
+# 推奨方法（Poetry 2.x系対応）:
+poetry run jupyter lab  # 直接起動（推奨）
+# または: poetry env activate && jupyter lab
 jupyter lab
 # colab_lessons/lesson_01_basics_and_sine_waves.ipynb から開始
 ```
@@ -418,7 +420,9 @@ poetry install --with dev
 ### 仮想環境の利用
 ```bash
 # 仮想環境をアクティベート
-poetry shell
+# 推奨方法（Poetry 2.x系対応）:
+poetry run jupyter lab  # 直接起動（推奨）
+# または: poetry env activate && jupyter lab
 
 # または、コマンドを直接実行
 poetry run python your_script.py
@@ -454,7 +458,9 @@ save_audio("my_first_sound.wav", 44100, final_signal)
 poetry run python your_script.py
 
 # または仮想環境をアクティベートしてから実行
-poetry shell
+# 推奨方法（Poetry 2.x系対応）:
+poetry run jupyter lab  # 直接起動（推奨）
+# または: poetry env activate && jupyter lab
 python your_script.py
 ```
 
@@ -472,7 +478,9 @@ poetry run python examples/basic_examples.py
 #### **ローカル環境での実行**
 ```bash
 # Poetryで仮想環境をアクティベート
-poetry shell
+# 推奨方法（Poetry 2.x系対応）:
+poetry run jupyter lab  # 直接起動（推奨）
+# または: poetry env activate && jupyter lab
 
 # Jupyter Lab を起動
 jupyter lab
@@ -558,7 +566,9 @@ curl -sSL https://install.python-poetry.org | python3 -
 poetry install --with dev
 
 # 仮想環境をアクティベート
-poetry shell
+# 推奨方法（Poetry 2.x系対応）:
+poetry run jupyter lab  # 直接起動（推奨）
+# または: poetry env activate && jupyter lab
 
 # テストの実行
 poetry run python run_tests.py
