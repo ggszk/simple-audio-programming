@@ -86,7 +86,7 @@ class SimpleSynthesizer(BaseInstrument):
         
         return signal
 
-class Piano(BaseInstrument):
+class BasicPiano(BaseInstrument):
     """ピアノの音色をシミュレート"""
     
     def __init__(self, config=None):
@@ -129,7 +129,7 @@ class Piano(BaseInstrument):
         
         return signal
 
-class Organ(BaseInstrument):
+class BasicOrgan(BaseInstrument):
     """オルガンの音色をシミュレート"""
     
     def __init__(self, config=None):
@@ -170,7 +170,7 @@ class Organ(BaseInstrument):
         
         return signal
 
-class Guitar(BaseInstrument):
+class BasicGuitar(BaseInstrument):
     """ギターの音色をシミュレート"""
     
     def __init__(self, config=None):
@@ -205,7 +205,7 @@ class Guitar(BaseInstrument):
         
         return signal
 
-class Drum(BaseInstrument):
+class BasicDrum(BaseInstrument):
     """ドラムの音色をシミュレート"""
     
     def __init__(self, drum_type='kick', config=None):
@@ -226,27 +226,61 @@ class Drum(BaseInstrument):
             self.envelope = ADSREnvelope(attack=0.001, decay=0.02, sustain=0.0, release=0.05, config=config)
     
     def play_note(self, note_number=60, velocity=100, duration=0.5):
-        """ドラム音を生成"""
-        if self.drum_type == 'kick':
-            # キックドラム: 低周波のサイン波 + 短いピッチベンド
-            signal = self.oscillator.generate(self.base_freq, duration)
-            # ピッチベンドエフェクト
-            pitch_bend = np.exp(-np.linspace(0, 5, len(signal)))
+        """ドラム音を生成
+        
+        MIDIノート番号に基づいてドラムの種類を決定:
+        - 36: キックドラム
+        - 38: スネアドラム  
+        - 42: ハイハット
+        - その他: ノイズ
+        """
+        # MIDIノート番号に基づいてドラムの種類を決定
+        if note_number == 36:  # キックドラム
+            drum_type = 'kick'
+            base_freq = 50  # より低い周波数でよりパンチのある音
+            envelope = ADSREnvelope(attack=0.001, decay=0.15, sustain=0.0, release=0.4, config=self.config)
+        elif note_number == 38:  # スネアドラム
+            drum_type = 'snare'
+            base_freq = 200
+            envelope = ADSREnvelope(attack=0.001, decay=0.05, sustain=0.0, release=0.1, config=self.config)
+        elif note_number == 42:  # ハイハット
+            drum_type = 'hihat'
+            base_freq = 8000
+            envelope = ADSREnvelope(attack=0.001, decay=0.02, sustain=0.0, release=0.05, config=self.config)
+        else:
+            drum_type = 'generic'
+            base_freq = 200
+            envelope = ADSREnvelope(attack=0.001, decay=0.1, sustain=0.0, release=0.2, config=self.config)
+        
+        if drum_type == 'kick':
+            # キックドラム: 低周波のサイン波 + ピッチベンド + 音量強調
+            signal = self.oscillator.generate(base_freq, duration)
+            # ピッチベンドエフェクト（より緩やかに）
+            pitch_bend = np.exp(-np.linspace(0, 3, len(signal)))
             signal *= pitch_bend
             
-        elif self.drum_type == 'snare':
+            # キック音を強調するため、低周波成分を追加
+            sub_bass = self.oscillator.generate(base_freq * 0.5, duration)
+            sub_bass *= np.exp(-np.linspace(0, 4, len(sub_bass)))
+            signal += 0.5 * sub_bass
+            
+            # キック音をより聞こえやすくするために音量を増強
+            signal *= 2.0
+            
+        elif drum_type == 'snare':
             # スネアドラム: トーン + ノイズ
-            tone = self.oscillator.generate(self.base_freq, duration)
+            tone = self.oscillator.generate(base_freq, duration)
             noise = self.noise_gen.generate_white_noise(duration)
             signal = 0.3 * tone + 0.7 * noise
             
-        elif self.drum_type == 'hihat':
+        elif drum_type == 'hihat':
             # ハイハット: 高周波ノイズ + フィルター
             noise = self.noise_gen.generate_white_noise(duration)
             # 簡易ハイパスフィルター効果
             signal = noise
             
         else:
+            # 汎用ドラム音
             signal = self.noise_gen.generate_white_noise(duration)
         
         # ベロシティを適用
@@ -254,7 +288,7 @@ class Drum(BaseInstrument):
         signal *= amplitude
         
         # エンベロープを適用
-        envelope_data = self.envelope.generate(duration)
+        envelope_data = envelope.generate(duration)
         signal = apply_envelope(signal, envelope_data)
         
         # 正規化
@@ -262,3 +296,9 @@ class Drum(BaseInstrument):
             signal = signal / np.max(np.abs(signal)) * 0.8
         
         return signal
+
+# 後方互換性のためのエイリアス
+Piano = BasicPiano
+Organ = BasicOrgan
+Guitar = BasicGuitar
+Drum = BasicDrum

@@ -5,9 +5,9 @@
 """
 
 import numpy as np
-from audio_lib.core.audio_config import AudioConfig
-from audio_lib.core.wave_io import WaveFileIO
-from audio_lib.synthesis.note_utils import note_name_to_number
+from .core.audio_config import AudioConfig
+from .core.wave_io import WaveFileIO
+from .synthesis.note_utils import note_name_to_number
 
 class Note:
     """音符を表すクラス"""
@@ -31,22 +31,27 @@ class Note:
         self.start_time = start_time
         self.duration = duration
     
+    def get_frequency(self):
+        """ノートの周波数を取得"""
+        from .synthesis.note_utils import note_to_frequency
+        return note_to_frequency(self.note_number)
+    
     def __repr__(self):
         return f"Note(note={self.note_number}, vel={self.velocity}, start={self.start_time}, dur={self.duration})"
 
 class Track:
     """楽器トラッククラス"""
     
-    def __init__(self, instrument, name="Track"):
+    def __init__(self, name="Track", instrument=None):
         """
         トラックを初期化
         
         Args:
-            instrument: 楽器インスタンス
             name (str): トラック名
+            instrument: 楽器インスタンス（後で設定可能）
         """
-        self.instrument = instrument
         self.name = name
+        self.instrument = instrument
         self.notes = []
         self.volume = 1.0
         self.pan = 0.0  # -1.0 (左) to 1.0 (右)
@@ -62,6 +67,16 @@ class Track:
             duration (float): 音符の長さ (秒)
         """
         note = Note(note_number, velocity, start_time, duration)
+        self.notes.append(note)
+        return note
+    
+    def add_note_instance(self, note):
+        """
+        Noteインスタンスを直接追加
+        
+        Args:
+            note (Note): Noteインスタンス
+        """
         self.notes.append(note)
         return note
     
@@ -136,6 +151,15 @@ class Track:
         
         return output
 
+    def set_instrument(self, instrument):
+        """
+        楽器を設定
+        
+        Args:
+            instrument: 楽器インスタンス
+        """
+        self.instrument = instrument
+
 class Sequencer:
     """音楽シーケンサー"""
     
@@ -147,72 +171,89 @@ class Sequencer:
             config (AudioConfig): オーディオ設定
         """
         self.config = config or AudioConfig()
-        self.tracks = []
+        self.tracks = {}  # name -> Track の辞書
         self.tempo = 120  # BPM
         self.master_volume = 1.0
     
-    def add_track(self, instrument, name=None):
+    def add_track(self, track):
         """
         トラックを追加
         
         Args:
-            instrument: 楽器インスタンス
-            name (str): トラック名
-            
-        Returns:
-            Track: 追加されたトラック
+            track (Track): Trackインスタンス
         """
-        if name is None:
-            name = f"Track {len(self.tracks) + 1}"
-        
-        track = Track(instrument, name)
-        self.tracks.append(track)
-        return track
+        self.tracks[track.name] = track
     
-    def remove_track(self, track_index):
+    def set_instrument(self, track_name, instrument):
+        """
+        指定されたトラックに楽器を設定
+        
+        Args:
+            track_name (str): トラック名
+            instrument: 楽器インスタンス
+        """
+        if track_name in self.tracks:
+            self.tracks[track_name].set_instrument(instrument)
+        else:
+            raise ValueError(f"トラック '{track_name}' が見つかりません")
+    
+    def remove_track(self, track_name):
         """
         トラックを削除
         
         Args:
-            track_index (int): トラックインデックス
+            track_name (str): トラック名
         """
-        if 0 <= track_index < len(self.tracks):
-            del self.tracks[track_index]
+        if track_name in self.tracks:
+            del self.tracks[track_name]
     
     def clear_all_tracks(self):
         """全てのトラックをクリア"""
-        self.tracks = []
+        self.tracks = {}
     
     def get_total_duration(self):
         """全トラックの総演奏時間を取得"""
         if not self.tracks:
             return 0.0
-        return max(track.get_total_duration() for track in self.tracks)
+        return max(track.get_total_duration() for track in self.tracks.values())
     
-    def render(self, output_filename=None):
+    def render(self, duration=None, output_filename=None):
         """
         全トラックをレンダリングしてミックス
         
         Args:
+            duration (float): レンダリング時間（秒）。Noneの場合は自動計算
             output_filename (str): 出力ファイル名。Noneの場合はファイル保存しない
             
         Returns:
             np.ndarray: ミックスされた音声データ
         """
-        total_duration = self.get_total_duration()
+        total_duration = duration or self.get_total_duration()
         
         if total_duration <= 0:
             return np.array([])
         
         # 各トラックをレンダリング
         track_audio = []
-        for track in self.tracks:
-            audio = track.render(total_duration, self.config)
-            track_audio.append(audio)
+        for track in self.tracks.values():
+            if track.instrument is not None:  # 楽器が設定されている場合のみ
+                audio = track.render(total_duration, self.config)
+                track_audio.append(audio)
         
         # 全トラックをミックス
         if track_audio:
-            mixed_audio = sum(track_audio)
+            # 全て同じ長さにする
+            max_length = max(len(audio) for audio in track_audio)
+            padded_audio = []
+            for audio in track_audio:
+                if len(audio) < max_length:
+                    padded = np.zeros(max_length)
+                    padded[:len(audio)] = audio
+                    padded_audio.append(padded)
+                else:
+                    padded_audio.append(audio)
+            
+            mixed_audio = sum(padded_audio)
         else:
             mixed_audio = np.zeros(self.config.duration_to_samples(total_duration))
         
