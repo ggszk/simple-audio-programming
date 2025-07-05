@@ -29,7 +29,7 @@ jobs:
     - name: Lint with flake8 (critical errors only)
       timeout-minutes: 2
       run: |
-        flake8 audio_lib/ --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 audio_lib/ --count --select=E9,F63,F7,F82 --show-source --statistics --max-line-length=127
     
     - name: Quick test
       timeout-minutes: 5
