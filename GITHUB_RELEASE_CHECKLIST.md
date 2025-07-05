@@ -7,9 +7,8 @@
 
 - [x] `README.md` - プロジェクトの説明とクイックスタート
 - [x] `LICENSE` - MITライセンス
-- [x] `requirements.txt` - 実行時依存関係
-- [x] `requirements-dev.txt` - 開発時依存関係
-- [x] `setup.py` または `pyproject.toml` - パッケージ設定
+- [x] `pyproject.toml` - Poetry設定と依存関係
+- [x] `poetry.lock` - 依存関係ロックファイル
 - [x] `.gitignore` - Git除外ファイル
 - [x] `CONTRIBUTING.md` - 貢献ガイドライン
 - [x] `CODE_OF_CONDUCT.md` - 行動規範
@@ -70,14 +69,14 @@
 ## 🏷️ リリース準備
 
 ### バージョン管理
-- [ ] `setup.py` / `pyproject.toml` のバージョン確認
+- [ ] `pyproject.toml` のバージョン確認
 - [ ] `CHANGELOG.md` の更新
 - [ ] リリースタグの準備: `v1.0.0`
 
 ### パッケージ化
 - [ ] PyPI公開の準備（オプション）
-- [ ] パッケージビルドテスト: `python -m build`
-- [ ] インストールテスト: `pip install -e .`
+- [ ] パッケージビルドテスト: `poetry build`
+- [ ] インストールテスト: `poetry install`
 
 ## 🎯 教育的価値の確認
 

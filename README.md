@@ -44,6 +44,10 @@
 ```
 simple-audio-programming/    # プロジェクト全体
 ├── README.md                    # このファイル
+├── pyproject.toml              # Poetry設定ファイル（依存関係・プロジェクト設定）
+├── poetry.lock                 # 依存関係ロックファイル（バージョン固定）
+├── pytest.ini                 # pytest設定
+├── run_tests.py               # テスト実行スクリプト
 ├── audio_lib/                   # メインライブラリ
 │   ├── __init__.py             # メインモジュール
 │   ├── core/                   # 基本機能
@@ -59,9 +63,62 @@ simple-audio-programming/    # プロジェクト全体
 │   ├── instruments/            # 楽器クラス
 │   │   └── basic_instruments.py # ピアノ、ギター、ドラム等
 │   └── sequencer.py            # 楽曲制作用シーケンサー
-└── examples/                   # 使用例とチュートリアル
-    ├── basic_examples.py       # 基本的な使用例
-    └── educational_tutorial.py # 教育用チュートリアル
+├── examples/                   # 使用例とチュートリアル
+│   ├── basic_examples.py       # 基本的な使用例
+│   └── educational_tutorial.py # 教育用チュートリアル
+├── colab_lessons/              # Google Colab用レッスン
+│   ├── lesson_01_basics_and_sine_waves.ipynb
+│   ├── lesson_02_envelopes_and_adsr.ipynb
+│   └── ...                     # その他のレッスン
+└── tests/                      # テストコード
+    ├── test_oscillators.py     # 基本機能テスト
+    └── ...                     # その他のテスト
+```
+
+## 🎯 依存関係管理
+
+このプロジェクトは **Poetry** を使用して依存関係を管理しています：
+
+### Poetry の利点
+- **依存関係の自動解決**: 互換性のあるバージョンを自動選択
+- **ロックファイル**: 再現可能な環境の保証（`poetry.lock`）
+- **仮想環境の自動管理**: 分離された開発環境
+- **プロジェクト設定の一元化**: `pyproject.toml`で全設定を管理
+- **パッケージ公開**: PyPIへの簡単な公開
+
+### 教育的メリット
+- **環境の統一**: 全ての学習者が同じ環境で実行可能
+- **依存関係の透明性**: 必要なパッケージが明確
+- **再現可能性**: `poetry.lock`により同一環境の再現
+- **モダンな開発手法**: 現代的なPython開発を体験
+
+### pyproject.toml の例
+```toml
+[tool.poetry]
+name = "simple-audio-programming"
+version = "0.1.0"
+description = "シンプル音響プログラミング教育ライブラリ"
+authors = ["Your Name <your.email@example.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+numpy = "^1.21.0"
+scipy = "^1.7.0"
+matplotlib = "^3.5.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.0.0"
+pytest-cov = "^4.0.0"
+black = "^22.0.0"
+flake8 = "^4.0.0"
+jupyter = "^1.0.0"
+jupyterlab = "^3.4.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
 ```
 
 ## 主な機能
@@ -118,18 +175,36 @@ sequencer.render("my_song.wav")
 
 ### 1. チュートリアルから始める
 ```bash
-cd simple-audio-programming/examples
-python educational_tutorial.py
+poetry run python examples/educational_tutorial.py
 ```
 
 ### 2. 基本例を試す
 ```bash
-cd simple-audio-programming/examples
-python basic_examples.py
+poetry run python examples/basic_examples.py
 ```
 
-### 3. 独自の楽曲を作成
-ライブラリを使って自由に楽曲を作成できます。
+### 3. Jupyter Notebookでの学習
+```bash
+poetry shell
+jupyter lab
+# colab_lessons/lesson_01_basics_and_sine_waves.ipynb から開始
+```
+
+### 4. 独自の楽曲を作成
+ライブラリを使って自由に楽曲を作成できます：
+
+```python
+# your_music.py
+from audio_lib import Sequencer, BasicPiano
+from audio_lib.synthesis import note_name_to_number
+
+sequencer = Sequencer()
+piano = BasicPiano()
+# 楽曲制作...
+
+# 実行
+# poetry run python your_music.py
+```
 
 ## 教育的な利点
 
@@ -319,23 +394,34 @@ plt.plot(envelope_data)  # ADSR曲線が見える
 
 ### 必要条件
 - Python 3.8 以上
-- NumPy, SciPy, Matplotlib
+- Poetry
 
-### pip からインストール
+### Poetryのインストール
 ```bash
-pip install simple-audio-programming
+# Poetry がインストールされていない場合
+curl -sSL https://install.python-poetry.org | python3 -
 ```
 
-### 開発版のインストール
+### プロジェクトのセットアップ
 ```bash
+# プロジェクトのクローン
 git clone https://github.com/ggszk/simple-audio-programming.git
 cd simple-audio-programming
-pip install -e .
+
+# 依存関係のインストール
+poetry install
+
+# 開発用依存関係も含める場合
+poetry install --with dev
 ```
 
-### 開発用依存関係のインストール
+### 仮想環境の利用
 ```bash
-pip install -r requirements-dev.txt
+# 仮想環境をアクティベート
+poetry shell
+
+# または、コマンドを直接実行
+poetry run python your_script.py
 ```
 
 ## 🚀 クイックスタート
@@ -362,10 +448,32 @@ save_audio("my_first_sound.wav", 44100, final_signal)
 # 真の音量差を確認するにはファイルをダウンロードして再生してください
 ```
 
+### 実行方法
+```bash
+# Poetry環境で実行
+poetry run python your_script.py
+
+# または仮想環境をアクティベートしてから実行
+poetry shell
+python your_script.py
+```
+
+### チュートリアルの実行
+```bash
+# examplesディレクトリのチュートリアル
+poetry run python examples/educational_tutorial.py
+
+# 基本例
+poetry run python examples/basic_examples.py
+```
+
 ### Jupyter Notebook でのチュートリアル
 
-#### **ローカル環境**
+#### **ローカル環境での実行**
 ```bash
+# Poetryで仮想環境をアクティベート
+poetry shell
+
 # Jupyter Lab を起動
 jupyter lab
 
@@ -394,42 +502,42 @@ jupyter lab
 
 ```bash
 # 全テスト実行（51件のテスト）
-python run_tests.py
+poetry run python run_tests.py
 
 # 包括的機能テスト
-python run_tests.py comprehensive
+poetry run python run_tests.py comprehensive
 
 # ノートブック関連テスト
-python run_tests.py notebook
+poetry run python run_tests.py notebook
 
 # 特定のレッスンテスト
-python run_tests.py lesson1
-python run_tests.py lesson2
+poetry run python run_tests.py lesson1
+poetry run python run_tests.py lesson2
 
 # クイックテスト（最小限）
-python run_tests.py quick
+poetry run python run_tests.py quick
 
 # 簡潔な出力
-python run_tests.py --quiet
+poetry run python run_tests.py --quiet
 ```
 
 ### 🔧 直接pytestでのテスト実行
 
 ```bash
 # 全テストの実行
-pytest
+poetry run pytest
 
 # 詳細出力
-pytest -v -s
+poetry run pytest -v -s
 
 # カバレッジ付きテスト
-pytest --cov=audio_lib
+poetry run pytest --cov=audio_lib
 
 # 特定のテストファイルのみ
-pytest tests/test_oscillators.py -v
+poetry run pytest tests/test_oscillators.py -v
 
 # 特定のテストクラス
-pytest tests/test_notebook_scenarios.py::TestLesson01BasicsAndSineWaves -v
+poetry run pytest tests/test_notebook_scenarios.py::TestLesson01BasicsAndSineWaves -v
 ```
 
 ## 🤝 貢献
@@ -437,21 +545,27 @@ pytest tests/test_notebook_scenarios.py::TestLesson01BasicsAndSineWaves -v
 プロジェクトへの貢献を歓迎します！詳細は [CONTRIBUTING.md](CONTRIBUTING.md) をご覧ください。
 
 ### 開発環境のセットアップ
+
 ```bash
 # リポジトリをクローン
 git clone https://github.com/ggszk/simple-audio-programming.git
 cd simple-audio-programming
 
-# 仮想環境の作成
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+# Poetryがインストールされていない場合
+curl -sSL https://install.python-poetry.org | python3 -
 
-# 依存関係のインストール
-pip install -r requirements.txt
-pip install -r requirements-dev.txt
+# 仮想環境の作成と依存関係のインストール
+poetry install --with dev
 
-# 開発モードでパッケージをインストール
-pip install -e .
+# 仮想環境をアクティベート
+poetry shell
+
+# テストの実行
+poetry run python run_tests.py
+
+# コード品質チェック
+poetry run black .
+poetry run flake8 audio_lib/
 ```
 
 ## 📄 ライセンス
