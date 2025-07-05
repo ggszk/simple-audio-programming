@@ -8,7 +8,7 @@ version = "1.0.0"
 description = "音響プログラミング学習用の教育的Pythonライブラリ"
 authors = ["Simple Audio Programming Team <your-email@example.com>"]
 readme = "README.md"
-package-mode = false
+packages = [{include = "audio_lib"}]
 homepage = "https://github.com/ggszk/simple-audio-programming"
 repository = "https://github.com/ggszk/simple-audio-programming.git"
 
