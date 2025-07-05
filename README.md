@@ -131,7 +131,7 @@ build-backend = "poetry.core.masonry.api"
 ```python
 from audio_lib import SineWave, ADSREnvelope, save_audio
 
-# サイン波生成
+# サイン波生成（デフォルト設定: 44100Hz）
 sine = SineWave()
 signal = sine.generate(frequency=440, duration=1.0)
 
@@ -146,6 +146,20 @@ save_audio("output.wav", 44100, signal_with_envelope)
 # 💡 Jupyter/Colabでの再生注意点:
 # Audio()ウィジェットは自動正規化するため音量差が聞こえません
 # 実際の音量差を確認するにはファイル保存→ダウンロード→再生
+```
+
+#### より詳細な設定例（教育的）
+```python
+from audio_lib import SineWave, ADSREnvelope, AudioConfig, save_audio
+
+# 設定を明示的に指定
+config = AudioConfig(sample_rate=44100)  # CD品質
+sine = SineWave(config)
+signal = sine.generate(frequency=440, duration=1.0)
+
+# 学生が設定値を確認できる
+print(f"サンプリング周波数: {config.sample_rate}Hz")
+print(f"生成されたサンプル数: {len(signal)}")
 ```
 
 ### 楽器クラスの使用
@@ -457,10 +471,11 @@ poetry run python your_script.py
 ### 基本的な使用方法
 ```python
 import numpy as np
-from audio_lib import SineWave, ADSREnvelope, save_audio
+from audio_lib import SineWave, ADSREnvelope, AudioConfig, save_audio
 
-# 1. サイン波を生成
-sine_osc = SineWave()
+# 1. 設定を作成（またはデフォルトを使用）
+config = AudioConfig(sample_rate=44100)  # CD品質
+sine_osc = SineWave(config)
 signal = sine_osc.generate(frequency=440, duration=1.0)
 
 # 2. エンベロープを適用
@@ -469,11 +484,21 @@ envelope = adsr.generate(duration=1.0)
 final_signal = signal * envelope
 
 # 3. WAVファイルとして保存（音量が正確に保持される）
-save_audio("my_first_sound.wav", 44100, final_signal)
+save_audio("my_first_sound.wav", config.sample_rate, final_signal)
 
 # 💡 Colab/Jupyter注意点: 
 # Audio()ウィジェットは音量を自動正規化します
 # 真の音量差を確認するにはファイルをダウンロードして再生してください
+```
+
+#### 簡潔版（デフォルト設定使用）
+```python
+from audio_lib import SineWave, ADSREnvelope, save_audio
+
+# デフォルト設定（44100Hz）で簡潔に
+sine = SineWave()  # config=None → デフォルトのAudioConfig()が自動作成
+signal = sine.generate(frequency=440, duration=1.0)
+save_audio("output.wav", 44100, signal)
 ```
 
 ### 実行方法
