@@ -147,7 +147,7 @@ final_wave = modulated_wave * amplitude
 
 ## 🚀 リリースプロセス
 
-1. バージョン番号の更新（`setup.py`）
+1. バージョン番号の更新（`pyproject.toml`）
 2. CHANGELOG.md の更新
 3. タグの作成: `git tag v1.x.x`
 4. GitHub Release の作成

@@ -136,7 +136,7 @@ git push -u origin main
    ```bash
    git clone https://github.com/ggszk/simple-audio-programming.git
    cd simple-audio-programming
-   pip install -e .
+   poetry install
    ```
    
    ## クイックスタート
