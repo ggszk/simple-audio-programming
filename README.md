@@ -63,9 +63,13 @@ simple-audio-programming/    # プロジェクト全体
 │   ├── instruments/            # 楽器クラス
 │   │   └── basic_instruments.py # ピアノ、ギター、ドラム等
 │   └── sequencer.py            # 楽曲制作用シーケンサー
-├── examples/                   # 使用例とチュートリアル
+├── examples/                   # 使用例とデバッグツール
 │   ├── basic_examples.py       # 基本的な使用例
-│   └── educational_tutorial.py # 教育用チュートリアル
+│   ├── educational_tutorial.py # 教育用チュートリアル
+│   ├── debug_oscillators.py    # オシレーターのデバッグ
+│   ├── debug_envelopes.py      # エンベロープのデバッグ
+│   ├── debug_instruments.py    # 楽器クラスのデバッグ
+│   └── debug_all.py            # 全機能の包括的テスト
 ├── colab_lessons/              # Google Colab用レッスン
 │   ├── lesson_01_basics_and_sine_waves.ipynb
 │   ├── lesson_02_envelopes_and_adsr.ipynb
@@ -173,17 +177,37 @@ sequencer.render("my_song.wav")
 
 ## 使用方法
 
-### 1. チュートリアルから始める
+### 1. ライブラリの動作確認（デバッグ）
+まずはライブラリが正常に動作するか確認してください：
+
+```bash
+# 全機能をテスト（推奨）
+poetry run python examples/debug_all.py
+
+# 個別機能のテスト
+poetry run python examples/debug_oscillators.py  # オシレーターテスト
+poetry run python examples/debug_envelopes.py    # エンベロープテスト
+poetry run python examples/debug_instruments.py  # 楽器テスト
+```
+
+デバッグスクリプトは以下を確認します：
+- 各オシレーター（サイン波、ノコギリ波、矩形波）の動作
+- エンベロープ（ADSR、Linear）の動作
+- 楽器クラス（Piano、Guitar、Drum）の動作
+- シーケンサーの動作
+- 生成された音声ファイルの確認
+
+### 2. チュートリアルから始める
 ```bash
 poetry run python examples/educational_tutorial.py
 ```
 
-### 2. 基本例を試す
+### 3. 基本例を試す
 ```bash
 poetry run python examples/basic_examples.py
 ```
 
-### 3. Jupyter Notebookでの学習
+### 4. Jupyter Notebookでの学習
 ```bash
 # 推奨方法（Poetry 2.x系対応）:
 poetry run jupyter lab  # 直接起動（推奨）
@@ -192,7 +216,7 @@ jupyter lab
 # colab_lessons/lesson_01_basics_and_sine_waves.ipynb から開始
 ```
 
-### 4. 独自の楽曲を作成
+### 5. 独自の楽曲を作成
 ライブラリを使って自由に楽曲を作成できます：
 
 ```python
