@@ -6,7 +6,7 @@ build-backend = "poetry.core.masonry.api"
 name = "simple-audio-programming"
 version = "1.0.0"
 description = "音響プログラミング学習用の教育的Pythonライブラリ"
-authors = ["Simple Audio Programming Team <your-email@example.com>"]
+authors = ["Simple Audio Programming Team <gen@ggszk.org>"]
 readme = "README.md"
 packages = [{include = "audio_lib"}]
 homepage = "https://github.com/ggszk/simple-audio-programming"

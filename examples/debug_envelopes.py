@@ -28,10 +28,10 @@ def debug_adsr_envelope():
     
     try:
         envelope = ADSREnvelope(
-            attack_time=attack_time,
-            decay_time=decay_time,
-            sustain_level=sustain_level,
-            release_time=release_time
+            attack=attack_time,
+            decay=decay_time,
+            sustain=sustain_level,
+            release=release_time
         )
         
         duration = 2.0
@@ -93,10 +93,10 @@ def debug_envelope_application():
         
         # ADSRエンベロープを作成
         envelope = ADSREnvelope(
-            attack_time=0.1,
-            decay_time=0.2,
-            sustain_level=0.7,
-            release_time=0.5
+            attack=0.1,
+            decay=0.2,
+            sustain=0.7,
+            release=0.5
         )
         
         # エンベロープを適用
@@ -130,10 +130,10 @@ def visualize_envelopes():
     try:
         # ADSRエンベロープ
         adsr_env = ADSREnvelope(
-            attack_time=0.1,
-            decay_time=0.2,
-            sustain_level=0.7,
-            release_time=0.5
+            attack=0.1,
+            decay=0.2,
+            sustain=0.7,
+            release=0.5
         )
         adsr_signal = adsr_env.generate(duration, config.sample_rate)
         
